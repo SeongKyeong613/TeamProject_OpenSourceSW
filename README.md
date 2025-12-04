@@ -3,6 +3,7 @@
 OpenCV를 사용하여 QR코드를 인식합니다.
 - Python 3.x
 - OpenCV
+
 pip install opencv-python
 python scanner.py --image your_image.png
 sample_images 폴더에서 테스트 이미지를 확인할 수 있습니다.
