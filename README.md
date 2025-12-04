@@ -1,5 +1,4 @@
 # TeamProject_OpenSourceSW
-This repository is for OpenSourceSW team project
 이 프로젝트는 이미지 파일을 이용해 QR / 바코드를 스캔하고 디코딩하는 도구입니다.
 OpenCV를 사용하여 QR코드를 인식합니다.
 - Python 3.x
