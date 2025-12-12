@@ -20,5 +20,8 @@ sample_images 폴더에서 테스트 이미지를 확인할 수 있습니다.
 ### Scan Result 
 ![Scan Result](demo/scan_result.png)
 
+### Camera Scan Result
+![[Camera Scan Result](scan_camera video.gif)
+
 • OpenCV 공식 문서: https://opencv.org/
 • QR 코드 설명: https://ko.wikipedia.org/wiki/QR_%EC%BD%94%EB%93%9C
