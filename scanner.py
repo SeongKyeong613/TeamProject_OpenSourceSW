@@ -64,7 +64,7 @@ def scan_camera():
     while True:
         ret, frame = cap.read()
         if not ret:
-            print("[ERROR] Failed to read frame."
+            print("[ERROR] Failed to read frame.")
             break
 
         # QR 코드 디코딩 (OpenCV 전용)
