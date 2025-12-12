@@ -1,4 +1,3 @@
-#202534724 권지우
 
 import argparse
 import cv2
@@ -48,7 +47,52 @@ def scan_image(path, show=True, save_path=None):
         cv2.imshow("Scan Result", image_with_boxes)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+        
+def scan_camera():
+    """
+    웹캠 실시간 QR 코드 스캔 (OpenCV QRCodeDetector 사용)
+    """
+    detector = cv2.QRCodeDetector()
+    cap = cv2.VideoCapture(0)
 
+    if not cap.isOpened():
+        print("[ERROR] Cannot open camera.")
+        return
+
+    print("[INFO] Webcam QR scan started. (Press 'q' to quit)")
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("[ERROR] Failed to read frame.")
+            break
+
+        # QR 코드 디코딩 (OpenCV 전용)
+        data, bbox, _ = detector.detectAndDecode(frame)
+
+        if bbox is not None and data:
+            # QR 박스 그리기
+            bbox = bbox.astype(int)
+            cv2.polylines(frame, [bbox], True, (0, 255, 0), 2)
+
+            # 텍스트 표시
+            cv2.putText(
+                frame, data, 
+                (bbox[0][0][0], bbox[0][0][1] - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7,
+                (0, 255, 0), 2
+            )
+
+            print(f"[QR] {data}")
+
+        cv2.imshow("Webcam QR Scanner", frame)
+
+        # q 누르면 종료
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
 
 def scan_camera():
     """
@@ -60,6 +104,8 @@ def scan_camera():
 
 def parse_args():
     """--image 또는 --camera 중 하나를 받는 옵션 파서."""
+def parse_args():
+    
     parser = argparse.ArgumentParser(
         description="QR code scanner (image/camera mode)"
     )
@@ -67,6 +113,11 @@ def parse_args():
         "--image",
         default=None,
         help="Path to input image file"
+    ) 
+    parser.add_argument(
+        "--camera",
+        action="store_true",
+        help="Use webcam realtime QR scanner"
     )
     parser.add_argument(
         "--output",
