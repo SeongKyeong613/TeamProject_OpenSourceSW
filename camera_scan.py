@@ -2,10 +2,11 @@
 # camera.py
 
 import cv2
-from qr_utils import decode_codes_multi, draw_results
-
+from utils import decode_codes
+from scanner import draw_results
 
 def camera_scan():
+    # 실시간 카메라에서 QR코드를 계속 읽는 함수
     # 기본 카메라(0번) 사용
     cap = cv2.VideoCapture(0)
 
