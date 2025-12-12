@@ -6,32 +6,32 @@ from utils import load_image, decode_codes
 
 
 def draw_results(image, results):
-    """
-    디코딩된 결과를 기반으로 이미지 위에 박스와 텍스트를 그려주는 함수.
-    """
+    """디코딩 결과를 이미지 위에 박스/텍스트로 시각화."""
     for r in results:
         x, y, w, h = r["rect"]
 
-        cv2.rectangle(image, (x, y), (x + w, y + h),
-                      (0, 255, 0), 2)
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         text = f'{r["type"]}: {r["data"]}'
-        cv2.putText(image, text, (x, y - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5, (0, 255, 0), 1)
-
+        cv2.putText(
+            image,
+            text,
+            (x, max(0, y - 10)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 255, 0),
+            1,
+        )
     return image
 
 
 def scan_image(path, show=True, save_path=None):
-    """
-    단일 이미지 파일에서 바코드/QR 코드를 스캔하는 메인 함수.
-    """
+    """단일 이미지 파일에서 QR 코드를 스캔."""
     image = load_image(path)
     results = decode_codes(image)
 
     if not results:
-        print("[INFO] No barcodes/QR codes found.")
+        print("[INFO] No QR codes found.")
     else:
         print("[INFO] Detected codes:")
         for idx, r in enumerate(results, start=1):
@@ -94,14 +94,24 @@ def scan_camera():
     cap.release()
     cv2.destroyAllWindows()
 
+def scan_camera():
+    """
+    (A2 담당) 웹캠 실시간 스캔 함수 자리.
+    A2가 구현하면 main()에서 바로 호출되도록 설계.
+    """
+    print("[INFO] Camera mode is selected. (A2 will implement scan_camera())")
+
+
+def parse_args():
+    """--image 또는 --camera 중 하나를 받는 옵션 파서."""
 def parse_args():
     
     parser = argparse.ArgumentParser(
-        description="Barcode / QR code scanner (image mode)"
+        description="QR code scanner (image/camera mode)"
     )
     parser.add_argument(
         "--image",
-        required=True,
+        default=None,
         help="Path to input image file"
     ) 
     parser.add_argument(
@@ -112,18 +122,32 @@ def parse_args():
     parser.add_argument(
         "--output",
         default=None,
-        help="Path to save result image"
+        help="Path to save result image (image mode only)"
     )
-
+    parser.add_argument(
+        "--camera",
+        action="store_true",
+        help="Use webcam for real-time scanning"
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    scan_image(args.image, show=True, save_path=args.output)
+
+    # 카메라 모드 우선
+    if args.camera:
+        scan_camera()
+        return
+
+    # 이미지 모드
+    if args.image:
+        scan_image(args.image, show=True, save_path=args.output)
+        return
+
+    # 옵션 없을 때
+    print("[ERROR] You must provide --image <path> or --camera")
 
 
 if __name__ == "__main__":
-    main()
-
     main()
